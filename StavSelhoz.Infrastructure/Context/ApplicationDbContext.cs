@@ -19,6 +19,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<ProductEntity> Products { get; set; }
     public DbSet<ProviderEntity> Providers { get; set; }
     public DbSet<ProviderProductsEntity> ProviderProducts { get; set; }
+    public DbSet<DeportamentsEntity> Deportaments { get; set; }
+    public DbSet<RoleEntity> Roles { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

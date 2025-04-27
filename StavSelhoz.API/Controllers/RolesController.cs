@@ -1,43 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StavSelhoz.Domain.Commons.DTO;
+using StavSelhoz.Infrastructure.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StavSelhoz.Controllers
+namespace StavSelhoz.Controllers;
+
+[Route("api/role")]
+[ApiController]
+public class RolesController(IDeportamentAndRoleService deportamentAndRoleService, ILogger<RolesController> logger ) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RolesController : ControllerBase
+    private readonly IDeportamentAndRoleService _deportamentAndRoleService = deportamentAndRoleService;
+    private readonly ILogger<RolesController> _logger = logger;
+
+    // GET: api/<RolesController>
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetRolesDTO>>> Get()
     {
-        // GET: api/<RolesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+		try
+		{
+			var response = await _deportamentAndRoleService.GetRoles();
 
-        // GET api/<RolesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+			if (response != null) return Ok(response);
+			else return BadRequest("Ошибка получения данных");
 
-        // POST api/<RolesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<RolesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<RolesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+		}
+		catch (Exception ex)
+		{
+            _logger.LogError($"Произошла ошибка при обработке запроса: \n {ex.Message} \n {ex.StackTrace}");
+            return StatusCode(500, new ProblemDetails
+            {
+                Title = "Internal server error",
+                Detail = $"Произошла ошибка при обработке запроса. {ex.Message}"
+            });
         }
     }
 }

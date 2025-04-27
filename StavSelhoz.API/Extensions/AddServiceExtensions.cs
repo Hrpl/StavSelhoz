@@ -79,5 +79,6 @@ public static class AddServiceExtensions
         services.AddScoped<IJwtHelper, JwtHelper>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICryptographyService, CryptographyService>();
+        services.AddScoped<IDeportamentAndRoleService, DeportamentAndService>();
     }
 }

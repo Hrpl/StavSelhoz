@@ -1,43 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using StavSelhoz.Domain.Commons.DTO;
+using StavSelhoz.Infrastructure.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StavSelhoz.Controllers
+namespace StavSelhoz.Controllers;
+
+[Route("api/deportaments")]
+[ApiController]
+public class DeportamentsController(IDeportamentAndRoleService deportamentAndRoleService, ILogger<DeportamentsController> logger) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DeportamentsController : ControllerBase
+    private readonly IDeportamentAndRoleService _deportamentAndRoleService = deportamentAndRoleService;
+    private readonly ILogger<DeportamentsController> _logger = logger;
+
+    // GET: api/<RolesController>
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetDeportamentDTO>>> Get()
     {
-        // GET: api/<DeportamentsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        try
         {
-            return new string[] { "value1", "value2" };
-        }
+            var response = await _deportamentAndRoleService.GetDeportaments();
 
-        // GET api/<DeportamentsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+            if (response != null) return Ok(response);
+            else return BadRequest("Ошибка получения данных");
 
-        // POST api/<DeportamentsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
         }
-
-        // PUT api/<DeportamentsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        catch (Exception ex)
         {
-        }
-
-        // DELETE api/<DeportamentsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            _logger.LogError($"Произошла ошибка при обработке запроса: \n {ex.Message} \n {ex.StackTrace}");
+            return StatusCode(500, new ProblemDetails
+            {
+                Title = "Internal server error",
+                Detail = $"Произошла ошибка при обработке запроса. {ex.Message}"
+            });
         }
     }
 }
