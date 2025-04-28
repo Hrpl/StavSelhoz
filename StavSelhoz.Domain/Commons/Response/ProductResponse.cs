@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StavSelhoz.Domain.Entities;
+namespace StavSelhoz.Domain.Commons.Response;
 
-public class ProductEntity : BaseEntity
+public class ProductResponse
 {
     public string Name { get; set; }
     public string Code { get; set; }
-    public string Measure {  get; set; }
+    public string Measure { get; set; }
     public double Price { get; set; }
     public int InStorage { get; set; }
 }
