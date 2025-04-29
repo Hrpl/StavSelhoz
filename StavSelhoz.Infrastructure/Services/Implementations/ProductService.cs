@@ -29,7 +29,8 @@ public class ProductService : IProductService
     public async Task<IEnumerable<ProductResponse>> GetAsync()
     {
         var query = _query.Query(TableName)
-            .Select("name as Name",
+            .Select("id as Id", 
+            "name as Name",
             "code as Code",
             "measure as Measure",
             "price as Price",
