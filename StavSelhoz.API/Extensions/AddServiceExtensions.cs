@@ -85,5 +85,6 @@ public static class AddServiceExtensions
         services.AddScoped<IFinanceService, FinanceService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IProviderService,  ProviderService>();
+        services.AddScoped<IOrderService, OrderService>();
     }
 }

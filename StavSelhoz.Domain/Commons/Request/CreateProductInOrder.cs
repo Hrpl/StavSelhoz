@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StavSelhoz.Domain.Entities;
+namespace StavSelhoz.Domain.Commons.Request;
 
-public class OrderProductsEntity : BaseEntity
+public class CreateProductInOrder
 {
     public int OrderId { get; set; }
     public int ProductId { get; set; }

@@ -8,6 +8,6 @@ namespace StavSelhoz.Domain.Entities;
 
 public class OrderEntity : BaseEntity
 {
+    public int UserId { get; set; }
     public int OrderStatusId { get; set; }
-    public double SummaryPrice { get; set; }
 }
