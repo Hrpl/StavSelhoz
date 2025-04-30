@@ -49,4 +49,13 @@ public class ProductService : IProductService
     {
         throw new NotImplementedException();
     }
+
+    public async Task<IEnumerable<ProductInStorageResponse>> GetProductInStorageAsync()
+    {
+        var query = _query.Query(TableName)
+            .Select("name as Name", "in_storage as InStorage");
+
+        var result = await _query.GetAsync<ProductInStorageResponse>(query);
+        return result;
+    }
 }

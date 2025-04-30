@@ -1,4 +1,5 @@
-﻿using StavSelhoz.Domain.Commons.Response;
+﻿using StavSelhoz.Domain.Commons.Request;
+using StavSelhoz.Domain.Commons.Response;
 using StavSelhoz.Domain.Entities;
 using StavSelhoz.Domain.Models;
 using System;
@@ -14,5 +15,6 @@ public interface IOrderService
     public Task CreateOrder(OrderModel model);
     public Task CreateProductInOrder(OrderProductModel model);
     public Task<IEnumerable<OrderStatusResponse>> GetOrderStatus();
-    public Task<IEnumerable<OrderResponse>> GetOrders();
+    public Task<IEnumerable<OrderResponse>> GetOrders(DateRequest? dates = null);
+    public Task<ReportStatusOrder> GetReportStatus(DateRequest dates);
 }

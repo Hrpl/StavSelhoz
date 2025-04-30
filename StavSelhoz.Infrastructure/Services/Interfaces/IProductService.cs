@@ -10,4 +10,5 @@ namespace StavSelhoz.Infrastructure.Services.Interfaces;
 
 public interface IProductService : IAsyncRepository<ProductResponse, ProductModel>
 {
+    public Task<IEnumerable<ProductInStorageResponse>> GetProductInStorageAsync();
 }

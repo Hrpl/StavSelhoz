@@ -1,4 +1,5 @@
 ﻿using SqlKata.Execution;
+using StavSelhoz.Domain.Commons.Request;
 using StavSelhoz.Domain.Commons.Response;
 using StavSelhoz.Domain.Models;
 using StavSelhoz.Infrastructure.Services.Interfaces;
@@ -45,5 +46,17 @@ public class FinanceService : IFinanceService
     public Task<int> UpdateAsync(FinanceModel model)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<FinanceStatResponse> GetFinanceSummary(DateRequest dates)
+    {
+        var result = await _query.Query("finances")
+        .Where("created_at", ">", DateTime.Parse(dates.StartDate))
+        .Where("created_at", "<", DateTime.Parse(dates.EndDate))
+        .SelectRaw("SUM(CASE WHEN type = 'income' THEN summary ELSE 0 END) as Income")
+        .SelectRaw("SUM(CASE WHEN type = 'expenses' THEN summary ELSE 0 END) as Expenses")
+        .FirstOrDefaultAsync<FinanceStatResponse>();
+
+        return result ?? new FinanceStatResponse();
     }
 }

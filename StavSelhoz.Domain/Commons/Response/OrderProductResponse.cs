@@ -8,6 +8,7 @@ namespace StavSelhoz.Domain.Commons.Response;
 
 public class OrderProductResponse
 {
+    public int OrderId { get; set; }
     public int Id { get; set; }
     public string Name { get; set; }
     public string Code { get; set; }

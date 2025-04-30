@@ -1,10 +1,7 @@
-﻿using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StavSelhoz.Domain.Commons.Request;
 using StavSelhoz.Domain.Commons.Response;
-using StavSelhoz.Domain.Models;
 using StavSelhoz.Infrastructure.Services.Implementations;
 using StavSelhoz.Infrastructure.Services.Interfaces;
 
@@ -12,79 +9,30 @@ using StavSelhoz.Infrastructure.Services.Interfaces;
 
 namespace StavSelhoz.Controllers;
 
-[Route("api/order")]
+[Route("api/report")]
 [ApiController]
-public class OrdersController(IOrderService orderService, ILogger<OrdersController> logger, IMapper mapper) : ControllerBase
+public class ReportsController(IOrderService orderService, IFinanceService financeService, IProductService productService, ILogger<ReportsController> logger) : ControllerBase
 {
     private readonly IOrderService _orderService = orderService;
-    private readonly ILogger<OrdersController> _logger = logger;
-    private readonly IMapper _mapper = mapper;
+    private readonly IFinanceService _financeService = financeService;
+    private readonly IProductService _productService = productService;
+    private readonly ILogger<ReportsController> _logger = logger;
 
 
-    // GET: api/<OrdersController>
-    [HttpGet("status")]
-    public async Task<ActionResult<IEnumerable<OrderStatusResponse>>> GetStatus()
+    [HttpGet("sales")]
+    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetSales(DateRequest request)
     {
         try
         {
-            var response = await _orderService.GetOrderStatus();
-
-            if (response != null) return Ok(response);
-            else return BadRequest("Не найдено данных");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while fetching clients.");
-            return StatusCode(500, new ProblemDetails
+            if(request == null || (request.StartDate == null && request.EndDate == null)) 
             {
-                Title = "Internal server error",
-                Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
-            });
-        }
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<OrderResponse>>> Get()
-    {
-        try
-        {
-            var response = await _orderService.GetOrders();
-
-            if (response != null) return Ok(response);
-            else return BadRequest("Не найдено данных");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while fetching clients.");
-            return StatusCode(500, new ProblemDetails
-            {
-                Title = "Internal server error",
-                Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
-            });
-        }
-    }
-
-    // POST api/<OrdersController>
-    [HttpPost]
-    [Authorize]
-    public async Task<ActionResult> Post()
-    {
-        try
-        {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "userId")?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Title = "Unauthorized",
-                    Detail = "Invalid user ID in token."
-                });
+                return BadRequest("Неверно заполнены данные");
             }
-            var model = new OrderModel { OrderStatusId = 1, UserId = Convert.ToInt32(userId)};
-            await _orderService.CreateOrder(model);
 
-            return Created();
+            var response = await _orderService.GetOrders(request);
+
+            if (response != null) return Ok(response);
+            else return BadRequest("Не найдено данных");
         }
         catch (Exception ex)
         {
@@ -97,15 +45,64 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
         }
     }
 
-    [HttpPost("product")]
-    public async Task<ActionResult> PostProducts([FromBody] CreateProductInOrder request)
+    [HttpGet("status")]
+    public async Task<ActionResult<ReportStatusOrder>> GetStatus(DateRequest request)
     {
         try
         {
-            var model = _mapper.Map<OrderProductModel>(request);
-            await _orderService.CreateProductInOrder(model);
+            if (request == null || (request.StartDate == null && request.EndDate == null))
+            {
+                return BadRequest("Неверно заполнены данные");
+            }
 
-            return Created();
+            var response = await _orderService.GetReportStatus(request);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while fetching clients.");
+            return StatusCode(500, new ProblemDetails
+            {
+                Title = "Internal server error",
+                Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
+            });
+        }
+    }
+
+    [HttpGet("finance")]
+    public async Task<ActionResult<FinanceStatResponse>> GetFinance(DateRequest request)
+    {
+        try
+        {
+            if (request == null || (request.StartDate == null && request.EndDate == null))
+            {
+                return BadRequest("Неверно заполнены данные");
+            }
+
+            var response = await _financeService.GetFinanceSummary(request);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while fetching clients.");
+            return StatusCode(500, new ProblemDetails
+            {
+                Title = "Internal server error",
+                Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
+            });
+        }
+    }
+
+    [HttpGet("product/storage")]
+    public async Task<ActionResult<ProductInStorageResponse>> GetProductInStorage()
+    {
+        try
+        {
+            var response = await _productService.GetProductInStorageAsync();
+
+            return Ok(response);
         }
         catch (Exception ex)
         {

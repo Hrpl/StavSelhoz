@@ -1,4 +1,5 @@
-﻿using StavSelhoz.Domain.Commons.Response;
+﻿using StavSelhoz.Domain.Commons.Request;
+using StavSelhoz.Domain.Commons.Response;
 using StavSelhoz.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,4 +11,5 @@ namespace StavSelhoz.Infrastructure.Services.Interfaces;
 
 public interface IFinanceService : IAsyncRepository<FinanceResponse, FinanceModel>
 {
+    public Task<FinanceStatResponse> GetFinanceSummary(DateRequest dates);
 }
