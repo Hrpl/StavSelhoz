@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace StavSelhoz.Infrastructure.Services.Implementations;
 
-public class DeportamentAndService : IDeportamentAndRoleService
+public class DeportamentAndService(IDbConnectionManager connectionManager) : IDeportamentAndRoleService
 {
-    private readonly QueryFactory _query;
+    private readonly QueryFactory _query = connectionManager.PostgresQueryFactory;
 
     public async Task<IEnumerable<GetDeportamentDTO>> GetDeportaments()
     {
