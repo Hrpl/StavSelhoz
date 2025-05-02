@@ -29,7 +29,7 @@ public class ProviderService(IDbConnectionManager connectionManager) : IProvider
     public async Task<IEnumerable<ProviderResponse>> GetAsync()
     {
         var suppliersQuery = _query.Query("providers")
-            .Select("id", "company_name as CompanyName", "contact_people as ContactPeople", "conditions as Conditions");
+            .Select("id", "company_name as CompanyName", "contact_people as ContactPeople", "сonditions as Conditions");
 
         var suppliers = await suppliersQuery.GetAsync<ProviderResponse>();
 
