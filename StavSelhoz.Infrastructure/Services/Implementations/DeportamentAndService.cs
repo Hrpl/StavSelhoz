@@ -25,7 +25,7 @@ public class DeportamentAndService(IDbConnectionManager connectionManager) : IDe
 
     public async Task<IEnumerable<GetRolesDTO>> GetRoles()
     {
-        var query = _query.Query("deportaments")
+        var query = _query.Query("roles")
             .Select("id as Id", "name as Name");
 
         var result = await _query.GetAsync<GetRolesDTO>(query);
