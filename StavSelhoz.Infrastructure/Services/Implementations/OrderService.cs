@@ -21,7 +21,7 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
         await _query.ExecuteAsync(query);
     }
 
-    public async Task CreateProductInOrder(OrderProductModel model)
+    public async Task CreateProductInOrder(IEnumerable<OrderProductModel> model)
     {
         var query = _query.Query("order_products").AsInsert(model);
         await _query.ExecuteAsync(query);

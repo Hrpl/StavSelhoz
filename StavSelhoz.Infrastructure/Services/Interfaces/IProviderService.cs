@@ -12,5 +12,5 @@ public interface IProviderService
 {
     public Task<IEnumerable<ProviderResponse>> GetAsync();
     public Task CreateProviderAsync(ProviderModel model);
-    public Task CreateProductForProviderAsync(ProviderProductsModel model);
+    public Task CreateProductForProviderAsync(IEnumerable<ProviderProductsModel> model);
 }

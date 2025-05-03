@@ -21,7 +21,7 @@ public class ProvidersController(IProviderService providerService, ILogger<Provi
 
     // GET: api/<ProvidersController>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProviderResponse>>>  Get()
+    public async Task<ActionResult<IEnumerable<ProviderResponse>>> Get()
     {
         try
         {
@@ -49,8 +49,16 @@ public class ProvidersController(IProviderService providerService, ILogger<Provi
         try
         {
 
-            var model = _mapper.Map<ProviderModel>(request);
-            await _providerService.CreateProviderAsync(model);
+            var providerModel = _mapper.Map<ProviderModel>(request);
+            await _providerService.CreateProviderAsync(providerModel);
+
+            List<ProviderProductsModel> productsModel = new List<ProviderProductsModel>();
+            foreach (var item in request.Products)
+            {
+                productsModel.Add(_mapper.Map<ProviderProductsModel>(item));
+            }
+
+            await _providerService.CreateProductForProviderAsync(productsModel);
 
             return Created();
         }
@@ -72,8 +80,7 @@ public class ProvidersController(IProviderService providerService, ILogger<Provi
         try
         {
 
-            var model = _mapper.Map<ProviderProductsModel>(request);
-            await _providerService.CreateProductForProviderAsync(model);
+            
 
             return Created();
         }

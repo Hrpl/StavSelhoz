@@ -67,7 +67,7 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
     // POST api/<OrdersController>
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult> Post()
+    public async Task<ActionResult> Post([FromBody] IEnumerable<CreateProductInOrder> request)
     {
         try
         {
@@ -81,8 +81,17 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
                     Detail = "Invalid user ID in token."
                 });
             }
-            var model = new OrderModel { OrderStatusId = 1, UserId = Convert.ToInt32(userId)};
-            await _orderService.CreateOrder(model);
+            var orderModel = new OrderModel { OrderStatusId = 1, UserId = Convert.ToInt32(userId)};
+            await _orderService.CreateOrder(orderModel);
+
+            List<OrderProductModel> productModel = new List<OrderProductModel>();
+
+            foreach (var product in request)
+            {
+                productModel.Add(_mapper.Map<OrderProductModel>(request));
+            }
+
+            await _orderService.CreateProductInOrder(productModel);
 
             return Created();
         }
@@ -97,13 +106,12 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
         }
     }
 
-    [HttpPost("product")]
-    public async Task<ActionResult> PostProducts([FromBody] CreateProductInOrder request)
+    /*[HttpPost("product")]
+    public async Task<ActionResult> PostProducts()
     {
         try
         {
-            var model = _mapper.Map<OrderProductModel>(request);
-            await _orderService.CreateProductInOrder(model);
+            
 
             return Created();
         }
@@ -116,5 +124,5 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
                 Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
             });
         }
-    }
+    }*/
 }

@@ -14,7 +14,7 @@ public class ProviderService(IDbConnectionManager connectionManager) : IProvider
 {
     private readonly QueryFactory _query = connectionManager.PostgresQueryFactory;
 
-    public async Task CreateProductForProviderAsync(ProviderProductsModel model)
+    public async Task CreateProductForProviderAsync(IEnumerable<ProviderProductsModel> model)
     {
         var query = _query.Query("provider_products").AsInsert(model);
         await _query.ExecuteAsync(query);

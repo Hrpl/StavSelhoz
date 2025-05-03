@@ -11,4 +11,5 @@ public class CreateProviderRequest
     public string CompanyName { get; set; }
     public string ContactPeople { get; set; }
     public string Сonditions { get; set; }
+    public IEnumerable<CreateProductForProvider> Products { get; set; }
 }
