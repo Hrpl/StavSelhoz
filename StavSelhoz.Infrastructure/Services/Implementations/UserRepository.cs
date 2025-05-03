@@ -79,7 +79,6 @@ public class UserRepository : IUserRepository
             .Select("email as Email",
             "password as Password",
             "salt as Salt",
-            "is_blocked as IsBlocked",
             "created_at as CreatedAt",
             "updated_at as UpdatedAt",
             "is_deleted as IsDeleted");
@@ -104,7 +103,6 @@ public class UserRepository : IUserRepository
     {
         var query = _query.Query(TableName)
             .Where("email", request.Email)
-            .Where("is_blocked", false)
             .Select("password as Password",
             "salt as Salt");
 
