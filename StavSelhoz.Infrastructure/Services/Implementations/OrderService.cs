@@ -31,7 +31,7 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
     {
         var query = _query.Query("orders as o")
             .Join("order_status as os", "os.id", "o.order_status_id")
-            .Where("created_at", ">", DateTime.Now.AddMonths(-1))
+            .Where("o.created_at", ">", DateTime.Now.AddMonths(-1))
             .Select("o.id as Id", "o.user_id as UserId", "os.name as OrderStatus", "o.created_at as Date");
 
         var orders = await query.GetAsync<OrderResponse>();
@@ -87,9 +87,9 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
     {
         var result = await _query.Query("orders")
         .Where("created_at", ">", DateTime.Now.AddMonths(-1))
-        .SelectRaw("COUNT(CASE WHEN status_order_id = 1 THEN 1 END) as New")
-        .SelectRaw("COUNT(CASE WHEN status_order_id = 2 THEN 1 END) as InProcess")
-        .SelectRaw("COUNT(CASE WHEN status_order_id = 3 THEN 1 END) as Completed")
+        .SelectRaw("COUNT(CASE WHEN order_status_id = 1 THEN 1 END) as New")
+        .SelectRaw("COUNT(CASE WHEN order_status_id = 2 THEN 1 END) as InProcess")
+        .SelectRaw("COUNT(CASE WHEN order_status_id = 3 THEN 1 END) as Completed")
         .FirstOrDefaultAsync<ReportStatusOrder>();
 
         return result ?? new ReportStatusOrder();
