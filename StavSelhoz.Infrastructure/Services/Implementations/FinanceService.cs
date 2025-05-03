@@ -48,11 +48,10 @@ public class FinanceService : IFinanceService
         throw new NotImplementedException();
     }
 
-    public async Task<FinanceStatResponse> GetFinanceSummary(DateRequest dates)
+    public async Task<FinanceStatResponse> GetFinanceSummary()
     {
         var result = await _query.Query("finances")
-        .Where("created_at", ">", DateTime.Parse(dates.StartDate))
-        .Where("created_at", "<", DateTime.Parse(dates.EndDate))
+        .Where("created_at", ">", DateTime.Now.AddMonths(-1))
         .SelectRaw("SUM(CASE WHEN type = 'income' THEN summary ELSE 0 END) as Income")
         .SelectRaw("SUM(CASE WHEN type = 'expenses' THEN summary ELSE 0 END) as Expenses")
         .FirstOrDefaultAsync<FinanceStatResponse>();

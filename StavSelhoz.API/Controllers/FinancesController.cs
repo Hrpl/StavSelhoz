@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StavSelhoz.Domain.Commons.Request;
 using StavSelhoz.Domain.Commons.Response;
 using StavSelhoz.Domain.Models;
 using StavSelhoz.Infrastructure.Services.Implementations;
@@ -41,12 +42,13 @@ public class FinancesController(IFinanceService financeService, ILogger<Finances
 
     // POST api/<FinancesController>
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] FinanceResponse request)
+    public async Task<ActionResult> Post([FromBody] CreateFinanceDTO request)
     {
         try
         {
 
             var model = _mapper.Map<FinanceModel>(request);
+            model.CreatedAt = DateTime.Now;
             var result = await _financeService.CreateAsync(model);
 
             return Created();

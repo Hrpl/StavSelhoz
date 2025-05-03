@@ -27,17 +27,12 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
         await _query.ExecuteAsync(query);
     }
 
-    public async Task<IEnumerable<OrderResponse>> GetOrders(DateRequest? dates = null)
+    public async Task<IEnumerable<OrderResponse>> GetOrders()
     {
         var query = _query.Query("orders as o")
             .Join("order_status as os", "os.id", "o.order_status_id")
+            .Where("created_at", ">", DateTime.Now.AddMonths(-1))
             .Select("o.id as Id", "o.user_id as UserId", "os.name as OrderStatus", "o.created_at as Date");
-
-        if (dates != null)
-        {
-            query.Where("o.created_at", ">", DateTime.Parse(dates.StartDate))
-                .Where("o.created_at", "<", DateTime.Parse(dates.EndDate));
-        }
 
         var orders = await query.GetAsync<OrderResponse>();
 
@@ -88,11 +83,10 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
         return result;
     }
 
-    public async Task<ReportStatusOrder> GetReportStatus(DateRequest dates)
+    public async Task<ReportStatusOrder> GetReportStatus()
     {
         var result = await _query.Query("orders")
-        .Where("created_at", ">", DateTime.Parse(dates.StartDate))
-        .Where("created_at", "<", DateTime.Parse(dates.EndDate))
+        .Where("created_at", ">", DateTime.Now.AddMonths(-1))
         .SelectRaw("COUNT(CASE WHEN status_order_id = 1 THEN 1 END) as New")
         .SelectRaw("COUNT(CASE WHEN status_order_id = 2 THEN 1 END) as InProcess")
         .SelectRaw("COUNT(CASE WHEN status_order_id = 3 THEN 1 END) as Completed")

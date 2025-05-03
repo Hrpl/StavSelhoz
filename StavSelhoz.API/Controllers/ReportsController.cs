@@ -20,16 +20,11 @@ public class ReportsController(IOrderService orderService, IFinanceService finan
 
 
     [HttpGet("sales")]
-    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetSales(DateRequest request)
+    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetSales()
     {
         try
         {
-            if(request == null || (request.StartDate == null && request.EndDate == null)) 
-            {
-                return BadRequest("Неверно заполнены данные");
-            }
-
-            var response = await _orderService.GetOrders(request);
+            var response = await _orderService.GetOrders();
 
             if (response != null) return Ok(response);
             else return BadRequest("Не найдено данных");
@@ -46,16 +41,11 @@ public class ReportsController(IOrderService orderService, IFinanceService finan
     }
 
     [HttpGet("status")]
-    public async Task<ActionResult<ReportStatusOrder>> GetStatus(DateRequest request)
+    public async Task<ActionResult<ReportStatusOrder>> GetStatus()
     {
         try
         {
-            if (request == null || (request.StartDate == null && request.EndDate == null))
-            {
-                return BadRequest("Неверно заполнены данные");
-            }
-
-            var response = await _orderService.GetReportStatus(request);
+            var response = await _orderService.GetReportStatus();
 
             return Ok(response);
         }
@@ -71,16 +61,11 @@ public class ReportsController(IOrderService orderService, IFinanceService finan
     }
 
     [HttpGet("finance")]
-    public async Task<ActionResult<FinanceStatResponse>> GetFinance(DateRequest request)
+    public async Task<ActionResult<FinanceStatResponse>> GetFinance()
     {
         try
         {
-            if (request == null || (request.StartDate == null && request.EndDate == null))
-            {
-                return BadRequest("Неверно заполнены данные");
-            }
-
-            var response = await _financeService.GetFinanceSummary(request);
+            var response = await _financeService.GetFinanceSummary();
 
             return Ok(response);
         }

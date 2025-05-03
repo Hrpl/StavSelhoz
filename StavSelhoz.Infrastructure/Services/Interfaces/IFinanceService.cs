@@ -11,5 +11,5 @@ namespace StavSelhoz.Infrastructure.Services.Interfaces;
 
 public interface IFinanceService : IAsyncRepository<FinanceResponse, FinanceModel>
 {
-    public Task<FinanceStatResponse> GetFinanceSummary(DateRequest dates);
+    public Task<FinanceStatResponse> GetFinanceSummary();
 }

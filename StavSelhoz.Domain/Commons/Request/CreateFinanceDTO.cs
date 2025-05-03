@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace StavSelhoz.Domain.Commons.Request;
 
-public class DateRequest
+public class CreateFinanceDTO
 {
-    public string? StartDate { get; set; }
-    public string? EndDate { get; set; }
+    public string Type { get; set; }
+    public double Summary { get; set; }
+    public string ResponsiblePerson { get; set; }
 }

@@ -15,6 +15,6 @@ public interface IOrderService
     public Task CreateOrder(OrderModel model);
     public Task CreateProductInOrder(OrderProductModel model);
     public Task<IEnumerable<OrderStatusResponse>> GetOrderStatus();
-    public Task<IEnumerable<OrderResponse>> GetOrders(DateRequest? dates = null);
-    public Task<ReportStatusOrder> GetReportStatus(DateRequest dates);
+    public Task<IEnumerable<OrderResponse>> GetOrders();
+    public Task<ReportStatusOrder> GetReportStatus();
 }
