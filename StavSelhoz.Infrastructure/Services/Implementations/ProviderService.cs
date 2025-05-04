@@ -16,8 +16,12 @@ public class ProviderService(IDbConnectionManager connectionManager) : IProvider
 
     public async Task CreateProductForProviderAsync(IEnumerable<ProviderProductsModel> model)
     {
-        var query = _query.Query("provider_products").AsInsert(model);
-        await _query.ExecuteAsync(query);
+        foreach (var product in model)
+        {
+
+            var query = _query.Query("provider_products").AsInsert(product);
+            await _query.ExecuteAsync(query);
+        }
     }
 
     public async Task CreateProviderAsync(ProviderModel model)
