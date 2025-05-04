@@ -65,30 +65,19 @@ public class OrdersController(IOrderService orderService, ILogger<OrdersControll
     }
 
     // POST api/<OrdersController>
-    [HttpPost]
-    [Authorize]
-    public async Task<ActionResult> Post([FromBody] IEnumerable<CreateProductInOrder> request)
+    [HttpPost("{id}")]
+    public async Task<ActionResult> Post([FromBody] IEnumerable<CreateProductInOrder> request, int id)
     {
         try
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "userId")?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Title = "Unauthorized",
-                    Detail = "Invalid user ID in token."
-                });
-            }
-            var orderModel = new OrderModel { OrderStatusId = 1, UserId = Convert.ToInt32(userId)};
+            var orderModel = new OrderModel { OrderStatusId = 1, UserId = id};
             await _orderService.CreateOrder(orderModel);
 
             List<OrderProductModel> productModel = new List<OrderProductModel>();
 
             foreach (var product in request)
             {
-                productModel.Add(_mapper.Map<OrderProductModel>(request));
+                productModel.Add(_mapper.Map<OrderProductModel>(product));
             }
 
             await _orderService.CreateProductInOrder(productModel);

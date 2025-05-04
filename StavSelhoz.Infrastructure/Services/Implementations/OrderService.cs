@@ -23,8 +23,12 @@ public class OrderService(IDbConnectionManager connectionManager) : IOrderServic
 
     public async Task CreateProductInOrder(IEnumerable<OrderProductModel> model)
     {
-        var query = _query.Query("order_products").AsInsert(model);
-        await _query.ExecuteAsync(query);
+        //n+1 error
+        foreach (var product in model)
+        {
+            var query = _query.Query("order_products").AsInsert(product);
+            await _query.ExecuteAsync(query);
+        }
     }
 
     public async Task<IEnumerable<OrderResponse>> GetOrders()
