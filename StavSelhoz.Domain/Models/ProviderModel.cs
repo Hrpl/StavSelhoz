@@ -12,7 +12,7 @@ public class ProviderModel
     public string CompanyName { get; set; }
     [SqlKata.Column("contact_people")]
     public string ContactPeople { get; set; }
-    [SqlKata.Column("conditions")]
+    [SqlKata.Column("сonditions")]
     public string Сonditions { get; set; }
     [SqlKata.Column("created_at")]
     public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;

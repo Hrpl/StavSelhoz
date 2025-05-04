@@ -72,26 +72,4 @@ public class ProvidersController(IProviderService providerService, ILogger<Provi
             });
         }
     }
-
-    // POST api/<ProvidersController>
-    [HttpPost("product")]
-    public async Task<ActionResult> CreateProviderProduct([FromBody] CreateProductForProvider request)
-    {
-        try
-        {
-
-            
-
-            return Created();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while fetching clients.");
-            return StatusCode(500, new ProblemDetails
-            {
-                Title = "Internal server error",
-                Detail = $"Произошла ошибка при обработке запроса. \n {ex.Message}"
-            });
-        }
-    }
 }
